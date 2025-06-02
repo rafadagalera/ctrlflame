@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 public class SensorData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sensor_seq")
-    @SequenceGenerator(name = "sensor_seq", sequenceName = "SENSOR_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "DEVICE_ID", nullable = false)
@@ -30,7 +29,7 @@ public class SensorData {
     private Double longitude;
 
     @Column(name = "TIMESTAMP", nullable = false)
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     @Column(name = "FIRE_RISK_LEVEL")
     private Integer fireRiskLevel;
