@@ -12,69 +12,56 @@ import java.util.regex.Pattern;
 
 @Service
 public class MqttService implements IMqttMessageListener {
-
     private static final Logger logger = LoggerFactory.getLogger(MqttService.class);
     private static final String MESSAGE_PATTERN = "([^;]+);([\\d.]+);([\\d.]+);([\\d.-]+);([\\d.-]+)";
+    private static final Pattern pattern = Pattern.compile(MESSAGE_PATTERN);
 
     private final SensorDataService sensorDataService;
     private final MqttProperties mqttProperties;
-    private final Pattern pattern;
 
     public MqttService(SensorDataService sensorDataService, MqttProperties mqttProperties) {
         this.sensorDataService = sensorDataService;
         this.mqttProperties = mqttProperties;
-        this.pattern = Pattern.compile(MESSAGE_PATTERN);
-        logger.info("MqttService initialized with topic: {}", mqttProperties.getTopic());
+        logger.info("MQTT Service initialized for topic: {}", mqttProperties.getTopic());
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) {
         try {
             String payload = new String(message.getPayload());
-            logger.info("Message received - Topic: {}, QoS: {}, Retained: {}",
-                    topic, message.getQos(), message.isRetained());
-            logger.debug("Message payload: {}", payload);
-
             Matcher matcher = pattern.matcher(payload);
 
             if (!matcher.matches()) {
-                logger.warn("Invalid message format received. Expected pattern: {}, Received payload: {}",
-                        MESSAGE_PATTERN, payload);
+                logger.warn("Invalid message format. Expected pattern: deviceId;temperature;humidity;latitude;longitude");
                 return;
             }
 
-            try {
-                String deviceId = matcher.group(1);
-                Double temperature = parseDoubleSafely(matcher.group(2), "temperatura");
-                Double humidity = parseDoubleSafely(matcher.group(3), "umidade");
-                Double latitude = parseDoubleSafely(matcher.group(4), "latitude");
-                Double longitude = parseDoubleSafely(matcher.group(5), "longitude");
+            String deviceId = matcher.group(1);
+            Double temperature = parseDouble(matcher.group(2), "temperature");
+            Double humidity = parseDouble(matcher.group(3), "humidity");
+            Double latitude = parseDouble(matcher.group(4), "latitude");
+            Double longitude = parseDouble(matcher.group(5), "longitude");
 
-                if (temperature == null || humidity == null || latitude == null || longitude == null) {
-                    logger.warn("One or more required values are null - DeviceId: {}, Temp: {}, Humidity: {}, Lat: {}, Long: {}",
-                            deviceId, temperature, humidity, latitude, longitude);
-                    return;
-                }
-
-                logger.info("Processing data from device {} - Temp: {}°C, Humidity: {}%, Location: ({}, {})",
-                        deviceId, temperature, humidity, latitude, longitude);
-
-                sensorDataService.processAndSaveData(deviceId, temperature, humidity, latitude, longitude);
-
-            } catch (IllegalStateException e) {
-                logger.error("Error extracting data from message: {}", e.getMessage());
+            if (temperature == null || humidity == null || latitude == null || longitude == null) {
+                logger.warn("Invalid sensor data values for device: {}", deviceId);
+                return;
             }
 
+            logger.info("Processing sensor data - Device: {}, Temperature: {}°C, Humidity: {}%", 
+                       deviceId, temperature, humidity);
+
+            sensorDataService.processAndSaveData(deviceId, temperature, humidity, latitude, longitude);
+
         } catch (Exception e) {
-            logger.error("Unexpected error processing MQTT message", e);
+            logger.error("Failed to process sensor data: {}", e.getMessage(), e);
         }
     }
 
-    private Double parseDoubleSafely(String value, String fieldName) {
+    private Double parseDouble(String value, String field) {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            logger.error("Invalid value for {}: {}", fieldName, value);
+            logger.warn("Invalid {} value: {}", field, value);
             return null;
         }
     }

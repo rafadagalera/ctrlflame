@@ -14,9 +14,8 @@ import org.springframework.messaging.MessageChannel;
 
 @Configuration
 public class MqttConfig {
-
-    private static final Logger logger = LoggerFactory.getLogger(MqttConfig.class);
     private final MqttProperties mqttProperties;
+    private final Logger logger = LoggerFactory.getLogger(MqttConfig.class);
 
     public MqttConfig(MqttProperties mqttProperties) {
         this.mqttProperties = mqttProperties;
@@ -33,15 +32,8 @@ public class MqttConfig {
         options.setConnectionTimeout(30);
         options.setKeepAliveInterval(60);
         options.setMaxReconnectDelay(5000);
-        
-        // For debugging - will print all MQTT protocol messages
-        System.setProperty("org.eclipse.paho.client.mqttv3.trace", "true");
 
-        logger.info("Configuring MQTT connection - Broker: {}, ClientId: {}, Topic: {}",
-                mqttProperties.getBrokerUrl(),
-                mqttProperties.getClientId(),
-                mqttProperties.getTopic());
-
+        logger.info("Configuring MQTT connection to broker: {}", mqttProperties.getBrokerUrl());
         factory.setConnectionOptions(options);
         return factory;
     }
@@ -52,26 +44,14 @@ public class MqttConfig {
     }
 
     @Bean
-    public MqttPahoMessageDrivenChannelAdapter mqttInbound(
-            MqttPahoClientFactory factory) {
-
+    public MqttPahoMessageDrivenChannelAdapter mqttInbound(MqttPahoClientFactory factory) {
         String clientId = mqttProperties.getClientId() + "-inbound";
         String topic = mqttProperties.getTopic();
-        // Add wildcard subscription for debugging
-        String[] topics = new String[]{
-            topic,              // Original topic
-            "ctrlflame/#",     // Wildcard for all ctrlflame topics
-            topic + "/#"       // Wildcard for subtopics
-        };
 
-        logger.info("Setting up MQTT inbound adapter - ClientId: {}, Topics: {}", 
-                   clientId, String.join(", ", topics));
+        logger.info("Setting up MQTT subscription - Topic: {}", topic);
 
-        MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter(
-                        clientId,
-                        factory,
-                        topics);
+        MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
+                clientId, factory, topic);
 
         adapter.setQos(1);
         adapter.setOutputChannel(mqttInputChannel());
