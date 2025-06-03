@@ -2,6 +2,8 @@ package br.com.ctrlflame.services;
 
 import br.com.ctrlflame.model.SensorData;
 import br.com.ctrlflame.repository.SensorDataRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -9,39 +11,53 @@ import java.util.List;
 
 @Service
 public class SensorDataService {
-
+    private static final Logger logger = LoggerFactory.getLogger(SensorDataService.class);
+    
     private final SensorDataRepository repository;
+    private final NotificationService notificationService;
 
-    public SensorDataService(SensorDataRepository repository) {
+    public SensorDataService(SensorDataRepository repository, NotificationService notificationService) {
         this.repository = repository;
+        this.notificationService = notificationService;
     }
-
 
     public List<SensorData> findAll() {
         return repository.findAll();
     }
+
     public List<SensorData> findByDeviceId(String deviceId) {
         if (deviceId == null || deviceId.trim().isEmpty()) {
-            throw new IllegalArgumentException("ID do dispositivo não pode ser vazio");
+            throw new IllegalArgumentException("Device ID cannot be empty");
         }
         return repository.findByDeviceId(deviceId);
     }
+
     public List<SensorData> findByFireRiskLevel(Integer level) {
         if (level == null || level < 1 || level > 3) {
-            throw new IllegalArgumentException("Nível de risco deve ser entre 1 e 3");
+            throw new IllegalArgumentException("Risk level must be between 1 and 3");
         }
         return repository.findByFireRiskLevel(level);
     }
+
     public SensorData processAndSaveData(String deviceId, Double temperature,
-                                         Double humidity, Double latitude, Double longitude) {
+                                       Double humidity, Double latitude, Double longitude) {
         SensorData data = new SensorData();
         data.setDeviceId(deviceId);
         data.setTemperature(temperature);
         data.setHumidity(humidity);
         data.setLatitude(latitude);
         data.setLongitude(longitude);
+        data.setTimestamp(LocalDateTime.now());
         data.calculateFireRisk();
 
-        return repository.save(data);
+        data = repository.save(data);
+
+        // Send notification if risk level is high
+        if (data.getFireRiskLevel() == 3) {
+            logger.info("High fire risk detected for device: {}. Sending notification.", deviceId);
+            notificationService.sendHighRiskAlert(data);
+        }
+
+        return data;
     }
 }
