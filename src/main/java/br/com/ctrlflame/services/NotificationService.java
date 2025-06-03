@@ -32,6 +32,14 @@ public class NotificationService {
         sendAlert(sensorData, additionalInfo);
     }
 
+    public void sendMediumRiskAlert(SensorData sensorData) {
+        sendAlert(sensorData, null);
+    }
+
+    public void sendMediumRiskAlert(SensorData sensorData, String additionalInfo) {
+        sendAlert(sensorData, additionalInfo);
+    }
+
     private void sendAlert(SensorData sensorData, String additionalInfo) {
         try {
             WhatsAppMessage message = WhatsAppMessage.fromSensorData(sensorData);

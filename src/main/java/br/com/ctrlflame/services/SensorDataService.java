@@ -52,10 +52,18 @@ public class SensorDataService {
 
         data = repository.save(data);
 
-        // Send notification if risk level is high
-        if (data.getFireRiskLevel() == 3) {
-            logger.info("High fire risk detected for device: {}. Sending notification.", deviceId);
-            notificationService.sendHighRiskAlert(data);
+        // Send notifications based on risk level
+        switch (data.getFireRiskLevel()) {
+            case 3:
+                logger.info("High fire risk detected for device: {}. Sending notification.", deviceId);
+                notificationService.sendHighRiskAlert(data);
+                break;
+            case 2:
+                logger.info("Medium fire risk detected for device: {}. Sending notification.", deviceId);
+                notificationService.sendMediumRiskAlert(data);
+                break;
+            default:
+                logger.debug("Low fire risk level for device: {}. No notification needed.", deviceId);
         }
 
         return data;
