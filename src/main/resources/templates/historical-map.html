@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CtrlFlame - Histórico de Queimadas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <style>
+        #map { 
+            height: 80vh;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .header {
+            padding: 20px;
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        .fire-info {
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Histórico de Queimadas - INPE</h1>
+        <p>Dados históricos de focos de incêndio registrados no Brasil</p>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var map = L.map('map').setView([-15.7801, -47.9292], 4);
+        var fireData = /*[[${fireData}]]*/ [];
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var markers = L.markerClusterGroup();
+
+        fireData.forEach(function(fire) {
+            if(fire.latitude && fire.longitude) {
+                var marker = L.marker([fire.latitude, fire.longitude]);
+                
+                var popupContent = `
+                    <div class="fire-info">
+                        <h3>Informações do Foco</h3>
+                        <p><strong>Data/Hora:</strong> ${fire.dateTime}</p>
+                        <p><strong>Estado:</strong> ${fire.state}</p>
+                        <p><strong>Cidade:</strong> ${fire.city}</p>
+                        <p><strong>Bioma:</strong> ${fire.biome}</p>
+                        <p><strong>Risco de Fogo:</strong> ${(fire.fireRisk * 100).toFixed(1)}%</p>
+                        <p><strong>Dias sem Chuva:</strong> ${fire.daysWithoutRain}</p>
+                        <p><strong>Precipitação:</strong> ${fire.precipitation}mm</p>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+                markers.addLayer(marker);
+            }
+        });
+
+        map.addLayer(markers);
+        /*]]>*/
+    </script>
+
+    <div style="padding: 20px;">
+        <a href="/" class="btn btn-primary">Voltar ao Dashboard</a>
+    </div>
+</body>
+</html> 
