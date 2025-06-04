@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Entenda o Problema - CtrlFlame</title>
+</head>
+<body>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section text-center">
+            <div class="container">
+                <h1 class="display-4">Entenda o Problema das Queimadas</h1>
+                <p class="lead">Conhecimento é o primeiro passo para a prevenção</p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Introduction -->
+            <section class="mb-5">
+                <h2>O Impacto das Queimadas no Brasil</h2>
+                <p class="lead">As queimadas representam um dos maiores desafios ambientais do Brasil, afetando diretamente a biodiversidade, a saúde pública e o clima.</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h3>Causas Principais</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
+                                Desmatamento para expansão agrícola
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
+                                Limpeza de terrenos para pecuária
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
+                                Práticas agrícolas tradicionais
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
+                                Incêndios criminosos
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Consequências</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Perda de biodiversidade
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Emissão de gases de efeito estufa
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Problemas respiratórios na população
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Alterações no ciclo das chuvas
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Biomes Section -->
+            <section class="mb-5">
+                <h2>Impacto por Bioma</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title h5">Amazônia</h3>
+                                <p class="card-text">Maior floresta tropical do mundo, sofre com queimadas principalmente durante o período de seca, entre julho e outubro.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title h5">Cerrado</h3>
+                                <p class="card-text">Segundo maior bioma do Brasil, enfrenta queimadas naturais e provocadas, principalmente para expansão agrícola.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title h5">Pantanal</h3>
+                                <p class="card-text">Maior planície alagada do mundo, sofre com incêndios que afetam drasticamente sua rica biodiversidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Prevention Section -->
+            <section class="mb-5">
+                <h2>Como Prevenir</h2>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="h5">Medidas de Prevenção</h3>
+                                <ul class="list-unstyled">
+                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Não queime lixo ou vegetação</li>
+                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Mantenha aceiros em áreas rurais</li>
+                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Denuncie queimadas ilegais</li>
+                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Participe de campanhas de conscientização</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <h3 class="h5">Emergência?</h3>
+                                <p>Em caso de incêndio, ligue:</p>
+                                <p class="h3">193</p>
+                                <small>Corpo de Bombeiros</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action -->
+            <section class="text-center mb-5">
+                <h2>Monitore as Queimadas</h2>
+                <p class="lead">Acompanhe em tempo real os focos de incêndio em todo o Brasil</p>
+                <a href="/historical-map" class="btn btn-danger btn-lg">
+                    <i class="bi bi-map"></i> Acessar Mapa
+                </a>
+            </section>
+        </div>
+    </main>
+</body>
+</html> 

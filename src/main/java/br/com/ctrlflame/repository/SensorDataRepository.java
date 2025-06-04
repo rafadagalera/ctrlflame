@@ -12,4 +12,5 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long> {
     List<SensorData> findByDeviceId(String deviceId);
     List<SensorData> findByFireRiskLevel(Integer level);
     List<SensorData> findByTemperatureGreaterThan(Double temperature);
+    long countByFireRiskLevel(Integer level);
 }

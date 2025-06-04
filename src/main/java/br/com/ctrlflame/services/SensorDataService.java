@@ -4,6 +4,7 @@ import br.com.ctrlflame.model.SensorData;
 import br.com.ctrlflame.repository.SensorDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,30 +14,34 @@ import java.util.List;
 public class SensorDataService {
     private static final Logger logger = LoggerFactory.getLogger(SensorDataService.class);
     
-    private final SensorDataRepository repository;
+    @Autowired
+    private SensorDataRepository sensorDataRepository;
     private final NotificationService notificationService;
 
-    public SensorDataService(SensorDataRepository repository, NotificationService notificationService) {
-        this.repository = repository;
+    public SensorDataService(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
 
     public List<SensorData> findAll() {
-        return repository.findAll();
+        return sensorDataRepository.findAll();
     }
 
     public List<SensorData> findByDeviceId(String deviceId) {
         if (deviceId == null || deviceId.trim().isEmpty()) {
             throw new IllegalArgumentException("Device ID cannot be empty");
         }
-        return repository.findByDeviceId(deviceId);
+        return sensorDataRepository.findByDeviceId(deviceId);
     }
 
     public List<SensorData> findByFireRiskLevel(Integer level) {
         if (level == null || level < 1 || level > 3) {
             throw new IllegalArgumentException("Risk level must be between 1 and 3");
         }
-        return repository.findByFireRiskLevel(level);
+        return sensorDataRepository.findByFireRiskLevel(level);
+    }
+
+    public long countByFireRiskLevel(int riskLevel) {
+        return sensorDataRepository.countByFireRiskLevel(riskLevel);
     }
 
     public SensorData processAndSaveData(String deviceId, Double temperature,
@@ -50,7 +55,7 @@ public class SensorDataService {
         data.setTimestamp(LocalDateTime.now());
         data.calculateFireRisk();
 
-        data = repository.save(data);
+        data = sensorDataRepository.save(data);
 
         // Send notifications based on risk level
         switch (data.getFireRiskLevel()) {
@@ -67,5 +72,9 @@ public class SensorDataService {
         }
 
         return data;
+    }
+
+    public void save(SensorData sensorData) {
+        sensorDataRepository.save(sensorData);
     }
 }
