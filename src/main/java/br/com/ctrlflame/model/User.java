@@ -23,13 +23,15 @@ public class User {
     private String name;
 
     @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
+    @Email(message = "Email deve ser válido")
     @Column(unique = true)
     private String email;
 
     @NotBlank(message = "Senha é obrigatória")
     @Size(min = 6, message = "Senha deve ter no mínimo 6 caracteres")
     private String password;
+
+    private String phone;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -39,5 +41,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
 }

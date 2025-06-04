@@ -6,26 +6,26 @@ import br.com.ctrlflame.model.Role;
 import br.com.ctrlflame.model.User;
 import br.com.ctrlflame.repository.RoleRepository;
 import br.com.ctrlflame.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -45,8 +45,23 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void updatePhone(String email, String phone) {
+        User user = findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (phone != null && !phone.matches("^\\+[1-9]\\d{1,14}$")) {
+            throw new IllegalArgumentException("Número de telefone inválido. Use o formato internacional: +5511999999999");
+        }
+        
+        user.setPhone(phone);
+        userRepository.save(user);
     }
 }

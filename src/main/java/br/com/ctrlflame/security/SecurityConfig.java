@@ -36,6 +36,7 @@ public class SecurityConfig {
                     "/images/**",
                     "/webjars/**"
                 ).permitAll()
+                .requestMatchers("/profile/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
