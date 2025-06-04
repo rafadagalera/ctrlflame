@@ -1,141 +1,204 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Entenda o Problema - CtrlFlame</title>
+    
+    <!-- Common CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            color: #dc3545 !important;
+        }
+        .nav-link.active {
+            font-weight: bold;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('/images/forest-fire.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 40px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .info-card {
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        .info-icon {
+            font-size: 2.5rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            position: relative;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: #dc3545;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <div th:replace="~{components/navigation :: navigation('understanding')}"></div>
+
     <main>
         <!-- Hero Section -->
         <section class="hero-section text-center">
             <div class="container">
-                <h1 class="display-4">Entenda o Problema das Queimadas</h1>
-                <p class="lead">Conhecimento é o primeiro passo para a prevenção</p>
+                <h1 class="display-4">Entenda o Problema</h1>
+                <p class="lead">Compreenda a importância do monitoramento e prevenção de queimadas</p>
             </div>
         </section>
 
-        <!-- Main Content -->
-        <div class="container">
-            <!-- Introduction -->
-            <section class="mb-5">
-                <h2>O Impacto das Queimadas no Brasil</h2>
-                <p class="lead">As queimadas representam um dos maiores desafios ambientais do Brasil, afetando diretamente a biodiversidade, a saúde pública e o clima.</p>
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h3>Causas Principais</h3>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
-                                Desmatamento para expansão agrícola
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
-                                Limpeza de terrenos para pecuária
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
-                                Práticas agrícolas tradicionais
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-check-circle-fill text-danger me-2"></i>
-                                Incêndios criminosos
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Consequências</h3>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-                                Perda de biodiversidade
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-                                Emissão de gases de efeito estufa
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-                                Problemas respiratórios na população
-                            </li>
-                            <li class="list-group-item">
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-                                Alterações no ciclo das chuvas
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Biomes Section -->
-            <section class="mb-5">
-                <h2>Impacto por Bioma</h2>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title h5">Amazônia</h3>
-                                <p class="card-text">Maior floresta tropical do mundo, sofre com queimadas principalmente durante o período de seca, entre julho e outubro.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title h5">Cerrado</h3>
-                                <p class="card-text">Segundo maior bioma do Brasil, enfrenta queimadas naturais e provocadas, principalmente para expansão agrícola.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="card-title h5">Pantanal</h3>
-                                <p class="card-text">Maior planície alagada do mundo, sofre com incêndios que afetam drasticamente sua rica biodiversidade.</p>
-                            </div>
+        <!-- Understanding Section -->
+        <section class="container mb-5">
+            <h2 class="text-center section-title">O Impacto das Queimadas</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card info-card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-tree-fill info-icon"></i>
+                            <h3 class="card-title h5">Impacto Ambiental</h3>
+                            <p class="card-text">
+                                As queimadas destroem ecossistemas inteiros, afetando a biodiversidade e contribuindo para as mudanças climáticas. 
+                                A destruição da vegetação também leva à erosão do solo e perda de habitat para diversas espécies.
+                            </p>
                         </div>
                     </div>
                 </div>
-            </section>
+                <div class="col-md-4">
+                    <div class="card info-card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-heart-pulse-fill info-icon"></i>
+                            <h3 class="card-title h5">Saúde Pública</h3>
+                            <p class="card-text">
+                                A fumaça das queimadas causa problemas respiratórios e cardiovasculares, afetando especialmente crianças e idosos. 
+                                A qualidade do ar em regiões próximas às queimadas é severamente comprometida.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card info-card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-currency-dollar info-icon"></i>
+                            <h3 class="card-title h5">Impacto Econômico</h3>
+                            <p class="card-text">
+                                Queimadas geram prejuízos econômicos significativos, afetando a agricultura, pecuária e turismo. 
+                                Os custos de combate e recuperação de áreas queimadas são extremamente elevados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            <!-- Prevention Section -->
-            <section class="mb-5">
-                <h2>Como Prevenir</h2>
+        <!-- Prevention Section -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <h2 class="text-center section-title">Como Prevenir Queimadas</h2>
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="h5">Medidas de Prevenção</h3>
-                                <ul class="list-unstyled">
-                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Não queime lixo ou vegetação</li>
-                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Mantenha aceiros em áreas rurais</li>
-                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Denuncie queimadas ilegais</li>
-                                    <li><i class="bi bi-arrow-right-circle-fill text-danger me-2"></i>Participe de campanhas de conscientização</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-4">
+                        <h3 class="h4 mb-3">Práticas Preventivas</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Não queime lixo ou resíduos agrícolas
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Mantenha aceiros em áreas rurais
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Evite fogueiras em áreas de risco
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                Denuncie queimadas ilegais
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card bg-danger text-white">
-                            <div class="card-body">
-                                <h3 class="h5">Emergência?</h3>
-                                <p>Em caso de incêndio, ligue:</p>
-                                <p class="h3">193</p>
-                                <small>Corpo de Bombeiros</small>
+                    <div class="col-lg-6">
+                        <h3 class="h4 mb-3">Em Caso de Incêndio</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Ligue imediatamente para o Corpo de Bombeiros (193)
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Não tente combater incêndios grandes sozinho
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Evacue a área se necessário
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Ajude a identificar a origem do fogo
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="container my-5 text-center">
+            <h2>Faça Sua Parte</h2>
+            <p class="lead mb-4">Ajude a prevenir e combater as queimadas em sua região</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card info-card">
+                        <div class="card-body">
+                            <h3 class="h4 mb-3">Contatos Importantes</h3>
+                            <div class="row">
+                                <div class="col-sm-6 mb-3">
+                                    <strong>Corpo de Bombeiros</strong>
+                                    <p class="mb-0">193</p>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <strong>Polícia Ambiental</strong>
+                                    <p class="mb-0">0800-61-8080</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Call to Action -->
-            <section class="text-center mb-5">
-                <h2>Monitore as Queimadas</h2>
-                <p class="lead">Acompanhe em tempo real os focos de incêndio em todo o Brasil</p>
-                <a href="/historical-map" class="btn btn-danger btn-lg">
-                    <i class="bi bi-map"></i> Acessar Mapa
-                </a>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Footer -->
+    <div th:replace="~{components/footer :: footer}"></div>
+
+    <!-- Common Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 
