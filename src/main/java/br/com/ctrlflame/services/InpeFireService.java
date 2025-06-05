@@ -3,22 +3,38 @@ package br.com.ctrlflame.services;
 import br.com.ctrlflame.model.InpeFire;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class InpeFireService {
     private static final Logger logger = LoggerFactory.getLogger(InpeFireService.class);
     private static final String CSV_PATH = "data/dados_inpe.csv";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    
+    private final Map<String, List<InpeFire>> fireDataCache = new ConcurrentHashMap<>();
+    private volatile boolean isDataLoaded = false;
 
-    public List<InpeFire> getAllFireData() {
+    @PostConstruct
+    public void init() {
+        // Load data asynchronously on startup
+        new Thread(() -> {
+            loadFireData();
+            isDataLoaded = true;
+            logger.info("Fire data loaded successfully");
+        }).start();
+    }
+
+    private void loadFireData() {
         List<InpeFire> fires = new ArrayList<>();
         
         try (BufferedReader br = new BufferedReader(
@@ -38,18 +54,38 @@ public class InpeFireService {
                     logger.warn("Failed to parse line: {}. Error: {}", line, e.getMessage());
                 }
             }
+            
+            // Group fires by state for faster querying
+            Map<String, List<InpeFire>> firesByState = new HashMap<>();
+            for (InpeFire fire : fires) {
+                firesByState.computeIfAbsent(fire.getState(), k -> new ArrayList<>()).add(fire);
+            }
+            
+            fireDataCache.putAll(firesByState);
+            
         } catch (Exception e) {
             logger.error("Failed to read INPE fire data: {}", e.getMessage(), e);
         }
-        
-        return fires;
     }
 
+    @Cacheable(value = "allFireData")
+    public List<InpeFire> getAllFireData() {
+        ensureDataLoaded();
+        return fireDataCache.values().stream()
+                .flatMap(List::stream)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Cacheable(value = "fireDataByState", key = "#state")
+    public List<InpeFire> getFireDataByState(String state) {
+        ensureDataLoaded();
+        return fireDataCache.getOrDefault(state, Collections.emptyList());
+    }
+
+    @Cacheable(value = "fireDataAsMap")
     public List<Map<String, Object>> getAllFireDataAsMap() {
         List<Map<String, Object>> fireData = new ArrayList<>();
-        List<InpeFire> fires = getAllFireData();
-        
-        for (InpeFire fire : fires) {
+        getAllFireData().forEach(fire -> {
             Map<String, Object> fireMap = new HashMap<>();
             fireMap.put("dateTime", fire.getDateTime().toString());
             fireMap.put("satellite", fire.getSatellite());
@@ -64,9 +100,20 @@ public class InpeFireService {
             fireMap.put("longitude", fire.getLongitude());
             fireMap.put("frp", fire.getFrp());
             fireData.add(fireMap);
-        }
+        });
         
         return fireData;
+    }
+
+    private void ensureDataLoaded() {
+        if (!isDataLoaded) {
+            synchronized (this) {
+                if (!isDataLoaded) {
+                    loadFireData();
+                    isDataLoaded = true;
+                }
+            }
+        }
     }
 
     private InpeFire parseFireData(String line) {
