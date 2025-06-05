@@ -24,6 +24,7 @@ public class WebController {
         
         model.addAttribute("highRiskCount", highRiskCount);
         model.addAttribute("mediumRiskCount", mediumRiskCount);
+        model.addAttribute("fireData", fireDataService.getAllFireData());
         
         return "home";
     }

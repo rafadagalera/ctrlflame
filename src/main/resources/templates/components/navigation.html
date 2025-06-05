@@ -19,6 +19,9 @@
                         <a class="nav-link" th:href="@{/historical-map}" th:classappend="${currentPage == 'historical-map' ? 'active' : ''}">Mapa de Queimadas</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sensor-info}" th:classappend="${currentPage == 'sensor-info' ? 'active' : ''}">Sistema de Sensores</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" th:href="@{/understanding}" th:classappend="${currentPage == 'understanding' ? 'active' : ''}">Entenda o Problema</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
