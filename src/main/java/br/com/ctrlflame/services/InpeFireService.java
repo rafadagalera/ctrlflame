@@ -10,13 +10,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class InpeFireService {
     private static final Logger logger = LoggerFactory.getLogger(InpeFireService.class);
-    private static final String CSV_PATH = "templates/data/dados_inpe.csv";
+    private static final String CSV_PATH = "data/dados_inpe.csv";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     public List<InpeFire> getAllFireData() {
@@ -44,6 +43,30 @@ public class InpeFireService {
         }
         
         return fires;
+    }
+
+    public List<Map<String, Object>> getAllFireDataAsMap() {
+        List<Map<String, Object>> fireData = new ArrayList<>();
+        List<InpeFire> fires = getAllFireData();
+        
+        for (InpeFire fire : fires) {
+            Map<String, Object> fireMap = new HashMap<>();
+            fireMap.put("dateTime", fire.getDateTime().toString());
+            fireMap.put("satellite", fire.getSatellite());
+            fireMap.put("country", fire.getCountry());
+            fireMap.put("state", fire.getState());
+            fireMap.put("city", fire.getCity());
+            fireMap.put("biome", fire.getBiome());
+            fireMap.put("daysWithoutRain", fire.getDaysWithoutRain());
+            fireMap.put("precipitation", fire.getPrecipitation());
+            fireMap.put("fireRisk", fire.getFireRisk());
+            fireMap.put("latitude", fire.getLatitude());
+            fireMap.put("longitude", fire.getLongitude());
+            fireMap.put("frp", fire.getFrp());
+            fireData.add(fireMap);
+        }
+        
+        return fireData;
     }
 
     private InpeFire parseFireData(String line) {

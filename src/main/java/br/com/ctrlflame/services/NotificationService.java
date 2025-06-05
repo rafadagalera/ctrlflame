@@ -4,7 +4,7 @@ import br.com.ctrlflame.config.TwilioConfig;
 import br.com.ctrlflame.model.SensorData;
 import br.com.ctrlflame.model.User;
 import br.com.ctrlflame.model.WhatsAppMessage;
-import br.com.ctrlflame.service.UserService;
+import br.com.ctrlflame.services.UserService;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.slf4j.Logger;

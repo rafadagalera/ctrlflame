@@ -1,6 +1,6 @@
 package br.com.ctrlflame.controller;
 
-import br.com.ctrlflame.service.FireDataService;
+import br.com.ctrlflame.services.InpeFireService;
 import br.com.ctrlflame.services.SensorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebController {
 
     @Autowired
-    private FireDataService fireDataService;
+    private InpeFireService inpeFireService;
 
     @Autowired
     private SensorDataService sensorDataService;
@@ -24,14 +24,14 @@ public class WebController {
         
         model.addAttribute("highRiskCount", highRiskCount);
         model.addAttribute("mediumRiskCount", mediumRiskCount);
-        model.addAttribute("fireData", fireDataService.getAllFireData());
+        model.addAttribute("fireData", inpeFireService.getAllFireDataAsMap());
         
         return "home";
     }
 
     @GetMapping("/historical-map")
     public String historicalMap(Model model) {
-        model.addAttribute("fireData", fireDataService.getAllFireData());
+        model.addAttribute("fireData", inpeFireService.getAllFireDataAsMap());
         return "historical-map";
     }
 

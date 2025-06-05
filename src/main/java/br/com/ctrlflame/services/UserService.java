@@ -1,4 +1,4 @@
-package br.com.ctrlflame.service;
+package br.com.ctrlflame.services;
 
 import br.com.ctrlflame.exceptions.ResourceNotFoundException;
 import br.com.ctrlflame.model.ERole;
@@ -64,4 +64,4 @@ public class UserService {
         user.setPhone(phone);
         userRepository.save(user);
     }
-}
+} 
