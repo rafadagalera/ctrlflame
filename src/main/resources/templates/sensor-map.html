@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Monitoramento em Tempo Real - CtrlFlame</title>
+    <th:block th:fragment="links">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+        <style>
+            #map { 
+                height: 80vh;
+                width: 100%;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .sensor-info {
+                padding: 10px;
+                background-color: white;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .stats {
+                background-color: white;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            .legend {
+                padding: 10px;
+                background: white;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+            }
+            .legend-item {
+                margin: 5px 0;
+            }
+            .legend-color {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                vertical-align: middle;
+                border-radius: 50%;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <main>
+        <div class="container">
+            <div class="stats mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5>Total de Sensores</h5>
+                        <p class="h3" id="totalSensors">0</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Alto Risco</h5>
+                        <p class="h3 text-danger" id="highRiskCount">0</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Médio Risco</h5>
+                        <p class="h3 text-warning" id="mediumRiskCount">0</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Baixo Risco</h5>
+                        <p class="h3 text-success" id="lowRiskCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="map">
+            <div class="legend">
+                <h6>Nível de Risco</h6>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #dc3545;"></span>
+                    Alto
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ffc107;"></span>
+                    Médio
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #198754;"></span>
+                    Baixo
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var map = L.map('map').setView([-15.7801, -47.9292], 4);
+            var sensorData = /*[[${sensorData}]]*/ [];
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            var markers = L.markerClusterGroup();
+
+            function getMarkerColor(riskLevel) {
+                switch(riskLevel) {
+                    case 3: return '#dc3545'; // Alto risco - Vermelho
+                    case 2: return '#ffc107'; // Médio risco - Amarelo
+                    default: return '#198754'; // Baixo risco - Verde
+                }
+            }
+
+            function getRiskText(riskLevel) {
+                switch(riskLevel) {
+                    case 3: return 'Alto';
+                    case 2: return 'Médio';
+                    default: return 'Baixo';
+                }
+            }
+
+            function createCustomIcon(riskLevel) {
+                return L.divIcon({
+                    html: `<div style="background-color: ${getMarkerColor(riskLevel)}; 
+                                     width: 12px; 
+                                     height: 12px; 
+                                     border-radius: 50%;
+                                     border: 2px solid white;
+                                     box-shadow: 0 0 4px rgba(0,0,0,0.4);"></div>`,
+                    className: 'custom-div-icon',
+                    iconSize: [12, 12]
+                });
+            }
+
+            function updateStats() {
+                var total = sensorData.length;
+                var highRisk = sensorData.filter(s => s.fireRiskLevel === 3).length;
+                var mediumRisk = sensorData.filter(s => s.fireRiskLevel === 2).length;
+                var lowRisk = sensorData.filter(s => s.fireRiskLevel === 1).length;
+
+                document.getElementById('totalSensors').textContent = total;
+                document.getElementById('highRiskCount').textContent = highRisk;
+                document.getElementById('mediumRiskCount').textContent = mediumRisk;
+                document.getElementById('lowRiskCount').textContent = lowRisk;
+            }
+
+            sensorData.forEach(function(sensor) {
+                if(sensor.latitude && sensor.longitude) {
+                    var marker = L.marker([sensor.latitude, sensor.longitude], {
+                        icon: createCustomIcon(sensor.fireRiskLevel)
+                    });
+                    
+                    var popupContent = `
+                        <div class="sensor-info">
+                            <h3>Sensor ${sensor.deviceId}</h3>
+                            <p><strong>Temperatura:</strong> ${sensor.temperature}°C</p>
+                            <p><strong>Umidade:</strong> ${sensor.humidity}%</p>
+                            <p><strong>Nível de Risco:</strong> ${getRiskText(sensor.fireRiskLevel)}</p>
+                            <p><strong>Última Atualização:</strong> ${new Date(sensor.timestamp).toLocaleString()}</p>
+                        </div>
+                    `;
+                    
+                    marker.bindPopup(popupContent);
+                    markers.addLayer(marker);
+                }
+            });
+
+            map.addLayer(markers);
+            updateStats();
+            /*]]>*/
+        </script>
+    </th:block>
+</body>
+</html> 

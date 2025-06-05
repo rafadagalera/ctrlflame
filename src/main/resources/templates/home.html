@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{components/header :: header('CtrlFlame - Monitoramento de Queimadas')}">
+</head>
+<body>
+    <!-- Navigation -->
+    <div th:replace="~{components/navigation :: navigation('home')}"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section text-center">
+            <div class="container">
+                <h1 class="display-4">CtrlFlame</h1>
+                <p class="lead">Sistema Inteligente de Monitoramento e Prevenção de Queimadas</p>
+                <div class="mt-4">
+                    <a th:href="@{/historical-map}" class="btn btn-danger btn-lg me-3">
+                        <i class="bi bi-map"></i> Mapa de Queimadas
+                    </a>
+                    <a th:href="@{/sensor-info}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-broadcast"></i> Monitoramento em Tempo Real
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="container mb-5">
+            <h2 class="text-center mb-4">Funcionalidades</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-map-fill text-danger display-4"></i>
+                            <h3 class="card-title h5 mt-3">Mapa Interativo</h3>
+                            <p class="card-text">Visualize focos de incêndio em tempo real com dados do INPE em um mapa interativo e intuitivo.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-graph-up text-danger display-4"></i>
+                            <h3 class="card-title h5 mt-3">Análise de Dados</h3>
+                            <p class="card-text">Acompanhe estatísticas detalhadas sobre queimadas por região, bioma e período.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-info-circle-fill text-danger display-4"></i>
+                            <h3 class="card-title h5 mt-3">Informação e Educação</h3>
+                            <p class="card-text">Acesse conteúdo educativo sobre prevenção de queimadas e preservação ambiental.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Monitoramento em Tempo Real</h2>
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <h3 class="h2 text-danger" th:text="${highRiskCount ?: 0}">0</h3>
+                        <p>Áreas de Alto Risco</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="h2 text-warning" th:text="${mediumRiskCount ?: 0}">0</h3>
+                        <p>Áreas de Médio Risco</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="h2 text-danger">24/7</h3>
+                        <p>Monitoramento Contínuo</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="h2 text-danger">100%</h3>
+                        <p>Cobertura Nacional</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="container my-5 text-center">
+            <h2>Faça Parte da Solução</h2>
+            <p class="lead">Ajude a prevenir e combater as queimadas no Brasil</p>
+            <div class="mt-4">
+                <a th:href="@{/understanding}" class="btn btn-outline-danger btn-lg me-3">
+                    Entenda o Problema
+                </a>
+                <a th:href="@{/historical-map}" class="btn btn-danger btn-lg">
+                    Visualizar Mapa
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html> 

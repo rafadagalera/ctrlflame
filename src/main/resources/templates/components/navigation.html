@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <nav th:fragment="navigation(currentPage)" class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="bi bi-fire"></i> CtrlFlame
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}" th:classappend="${currentPage == 'home' ? 'active' : ''}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/historical-map}" th:classappend="${currentPage == 'historical-map' ? 'active' : ''}">Mapa de Queimadas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/sensor-info}" th:classappend="${currentPage == 'sensor-info' ? 'active' : ''}">Sistema de Sensores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/understanding}" th:classappend="${currentPage == 'understanding' ? 'active' : ''}">Entenda o Problema</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/profile}" th:classappend="${currentPage == 'profile' ? 'active' : ''}">
+                            <i class="bi bi-person"></i> Perfil
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="btn btn-outline-danger me-2">Entrar</a>
+                        <a th:href="@{/register}" class="btn btn-danger">Registrar</a>
+                    </div>
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="d-flex">
+                        <button class="btn btn-outline-danger" type="submit">Sair</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html> 
