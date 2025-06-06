@@ -58,6 +58,56 @@ O CtrlFlame é um sistema integrado de monitoramento e prevenção de queimadas 
 ### resources/ Templates, dados csv e estilização
 
 
+## Documentação da API
+
+### URL
+```
+http://localhost:8080/api
+```
+
+### Endpoints
+
+- **Endpoint:** `/sensor-data`
+- **Método:** GET
+- **Descrição:** Retorna todos os dados dos sensores cadastrados no sistema
+- **Resposta esperada:** Lista de objetos SensorData contendo:
+  ```json
+  [
+    {
+      "id": "long",
+      "deviceId": "string",
+      "temperature": "double",
+      "humidity": "double",
+      "latitude": "double",
+      "longitude": "double",
+      "timestamp": "datetime",
+      "fireRiskLevel": "integer"
+    }
+  ]
+  ```
+
+- **Endpoint:** `/sensor-data/device/{deviceId}`
+- **Método:** GET
+- **Descrição:** Retorna todos os dados de um sensor específico
+- **Parâmetros:**
+  - `deviceId` (path): ID do dispositivo
+- **Resposta esperada:** Lista de objetos SensorData do dispositivo especificado
+
+- **Endpoint:** `/sensor-data/risk/{level}`
+- **Método:** GET
+- **Descrição:** Retorna todos os dados de sensores com um determinado nível de risco
+- **Parâmetros:**
+  - `level` (path): Nível de risco (1 = Baixo, 2 = Médio, 3 = Alto)
+- **Resposta esperada:** Lista de objetos SensorData com o nível de risco especificado
+
+### Cache
+
+Os endpoints utilizam cache para melhorar a performance:
+- `sensorData`: Cache para todos os dados dos sensores
+- `sensorDataByDevice`: Cache para dados por dispositivo
+- `sensorDataByRiskLevel`: Cache para dados por nível de risco
+
+
 ## Integrantes
 
 ### Carolina Machado 552925
