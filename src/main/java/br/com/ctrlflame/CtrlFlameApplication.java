@@ -18,9 +18,9 @@ public class CtrlFlameApplication {
         this.env = env;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(CtrlFlameApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(CtrlFlameApplication.class, args);
+	}
 
     @EventListener(ApplicationStartedEvent.class)
     public void checkEnvironmentVariables() {
