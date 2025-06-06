@@ -50,12 +50,12 @@ O CtrlFlame é um sistema integrado de monitoramento e prevenção de queimadas 
 
 ## Estrutura do Projeto
 
-### config/      Configurações
-### controller/  Controladores
-### model/      Entidades
-### repository/ Repositórios
-### services/   Serviços
-### resources/ Templates, dados csv e estilização
+- `config/`      Configurações
+- `controller/`  Controladores
+- `model/`   Entidades
+- `repository/` Repositórios
+- `services/`  Serviços
+- `resources/` Templates, dados csv e estilização
 
 
 ## Documentação da API
