@@ -33,16 +33,17 @@ O CtrlFlame é um sistema integrado de monitoramento e prevenção de queimadas 
 1. Configure as variáveis de ambiente (.env)
 
    No arquivo chamado variaveis.txt anexado junto com a entrega estão os valores que deverão ser subsitituidos no arquivo .env (ou adicionados manualmente)
-
+   ```
    ### twilio.account.sid=account_sid_fornecido 
    ### twilio.auth.token=auth_token_fornecido
    ### twilio.whatsapp.from=numero_whatsapp_fornecido
+   ```
 
-2. Instale as dependências 
+3. Instale as dependências 
 
 
-3. Execute o projeto
-   - ./mvnw spring-boot:run
+4. Execute o projeto
+   - `./mvnw spring-boot:run`
 
    - Abra o navegador e acesse: `http://localhost:8080`
 
