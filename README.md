@@ -4,10 +4,10 @@
 
 Nossa proposta é o CtrlFlame, um sistema inteligente de monitoramento e 
 alerta, utilizando microcontroladores de baixo custo, que detectam focos 
-de calor e enviam avisos instantâneos tanto aos bombeiros quanto aos 
-moradores da região, tudo isso por um canal simples e amplamente 
-utilizado: o WhatsApp. 
+de calor e enviam avisos instantâneos via protocolo MQTT tanto aos bombeiros quanto aos 
+moradores da região, tudo pelo Whatsapp. 
 O sistema foi projetado para ser escalável, seguro e de fácil acesso para a população geral
+Também contamos com os dados disponíveis no Site do INPE em `https://terrabrasilis.dpi.inpe.br/queimadas/bdqueimadas/` para a construção de um mapa interativo que mostra os principais focos de queimada no Brasil desde o começo de 2025.
 
 ###  Principais Funcionalidades
 
