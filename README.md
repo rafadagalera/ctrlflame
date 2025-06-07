@@ -72,7 +72,7 @@ http://localhost:8080/api
 - **Método:** GET
 - **Descrição:** Retorna todos os dados dos sensores cadastrados no sistema
 - **Resposta esperada:** Lista de objetos SensorData contendo:
-  ```json
+  ```
   [
     {
       "id": "long",
