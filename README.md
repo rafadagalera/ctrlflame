@@ -2,7 +2,12 @@
 
 ##  Sobre o Projeto
 
-O CtrlFlame é um sistema integrado de monitoramento e prevenção de queimadas que combina dados do INPE com uma rede de sensores IoT para fornecer alertas em tempo real e análises históricas de focos de incêndio.
+Nossa proposta é o CtrlFlame, um sistema inteligente de monitoramento e 
+alerta, utilizando microcontroladores de baixo custo, que detectam focos 
+de calor e enviam avisos instantâneos tanto aos bombeiros quanto aos 
+moradores da região, tudo isso por um canal simples e amplamente 
+utilizado: o WhatsApp. 
+O sistema foi projetado para ser escalável, seguro e de fácil acesso para a população geral
 
 ###  Principais Funcionalidades
 
